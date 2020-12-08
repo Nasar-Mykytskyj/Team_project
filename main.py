@@ -1,51 +1,36 @@
 
 from kivy import Config
-from kivy.app import App
+from kivy.clock import Clock
 from kivymd.app import MDApp
-Config.set('graphics','width','480')
-Config.set('graphics','height','640')
-#Config.set('kivy', 'keyboard_mode', 'systemanddock')
+from models.MapScreen import MapScreen
 from kivy.core.window import Window
 from kivy.lang import Builder
-from kivy.uix.button import Button
-from kivy.uix.screenmanager import Screen
-from kivy.uix.widget import Widget
-from kivy.uix.screenmanager import ScreenManager, Screen, SlideTransition
-from kivymd.theming import ThemeManager
-import json
+from kivy.uix.screenmanager import ScreenManager, Screen
 from data import db
 import os
-
 
 class Login(Screen):
     def do_login(self, loginText, passwordText):
         if db.authentication(loginText, passwordText):
             print("authentication...")
-            manager = TouristApp.get_screen_manager(self)
-            manager.add_widget(Homepage(name='homepage'))
-            manager.current = 'homepage'
+            self.manager.current = 'homepage'
         else:
             self.ids['wrong_data'].text = "Wrong password or login"
-    def go_to_signup_page(self):
-        manager=TouristApp.get_screen_manager(self)
-        from models.sign_up import Signup
-        manager.add_widget(Signup(name='signup'))
-        manager.current = 'signup'
+
 
 class Homepage(Screen):
     def __init__(self,**kvargs):
         super(Homepage, self).__init__(**kvargs)
         from models.location import location
         latitude,longitude,self.ids['current_location'].text =location.get_current_location()
-        """
         from models.map import Map
         self.map=Map(zoom=8, lat=latitude,lon=longitude)
         x,y=self.map.get_window_xy_from(latitude,longitude,16)
         self.map.set_zoom_at(9,x,y)
-        """
-        #self.ids["map_container"].add_widget(map)
+
+
     def show_location(self):
-        pass
+       pass
 
 
 class TouristApp(MDApp):
@@ -59,7 +44,10 @@ class TouristApp(MDApp):
         self.load_all_kv_files("kivy_file")
         self.manager = ScreenManager()
         self.manager.add_widget(Login(name='login'))
-
+        from models.sign_up import Signup
+        self.manager.add_widget(Signup(name='signup'))
+        self.manager.add_widget(Homepage(name='homepage'))
+        self.manager.add_widget(MapScreen(name="mapScreen"))
         Window.size = (480, 640)
 
         return self.manager
@@ -78,4 +66,5 @@ class TouristApp(MDApp):
     def get_screen_manager(self):
        return self.manager
 if __name__ == '__main__':
+    Clock.max_iteration = 100
     TouristApp().run()

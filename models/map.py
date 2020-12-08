@@ -1,17 +1,41 @@
-from kivy_garden.mapview import MapView, MapMarker
+from kivy.clock import Clock
+from kivy.core.window import Window
+from kivy_garden.mapview import MapView, MapMarker, MapMarkerPopup
+from kivymd.uix.behaviors import TouchBehavior
 
 
-class Map(MapView):
+class Map(MapView, TouchBehavior):
+    def __init__(self,**kvargs):
+        super(Map, self).__init__(**kvargs)
 
-    def on_touch_down(self, touch):
-        global xList
-        global yList
-        m1 = MapMarker(lat=67, lon=42)
-        self.add_marker(m1)
-        print(xList)
-        print(yList)
-        for i in range(len(xList)):
-            m=MapMarker(lat=xList[i],lon=yList[i])
-            self.add_marker(m)
+        self.marker=None
+
+    """""
+    не оптимізована херня не чіпати
+    код для того щоб карта не виходила за межі , працює ,але забагато операцій
+    
+    def on_map_relocated(self, *kwargs):
+        try:
+            x1, y1, x2, y2 = self.get_bbox()
+            centerX, centerY = Window.center
+            latRemainder = self.get_latlon_at(centerX, centerY, zoom=self.zoom)[0] - (x1 + x2) / 2
+            if x1 < -85.8: self.center_on((x1 + x2) / 2 + latRemainder + .01, self.lon)
+            if x2 > 83.6: self.center_on((x1 + x2) / 2 + latRemainder - .01, self.lon)
+            if y1 < -150: self.center_on(self.lat, (y1 + y2) / 2 + 0.01)
+            if y2 > 150: self.center_on(self.lat, (y1 + y2) / 2 - 0.01)
+        except Exception:
+            pass
+    """
+    def on_double_tap(self, touch, *args):
+        try:
+            if self.marker is not None:
+                self.remove_marker(self.marker)
+            x,y=touch.pos
+            lat,lon=self.get_latlon_at(x,y,self.zoom)
+            self.marker = MapMarkerPopup(lat=lat, lon=lon)
+            self.add_marker(self.marker)
+        except Exception:
+            pass
 
 
+map=Map()

@@ -45,8 +45,9 @@
                         text_color: 0, 0, 1, 1
                         text:"Choose location"
                         md_bg_color: 0.1, 0.1, 0.1, 0.1
-                        on_release:root.ids["map_container"].add_widget(root.map)
+                        #on_release:root.ids["map_container"].add_widget(root.map)
+                        on_release:root.manager.current="mapScreen"
                 GridLayout:
                     id:map_container
                     cols:1
-                BoxLayout:
+                #BoxLayout:

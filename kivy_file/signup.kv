@@ -15,7 +15,7 @@
         #md_bg_color: .1, .85, .77, 1
         pos_hint:None,None
         pos_hint: { 'top' : 1}
-        on_release:root.return_to_login_page()
+        on_release:root.manager.current = 'login'
     BoxLayout
         id: login_layout
         orientation: 'vertical'
