@@ -20,18 +20,19 @@
             BoxLayout:
                 orientation:'vertical'
                 BoxLayout:
-                    size_hint:1,0.6
-                    spacing:10
+                    size_hint:1,.8
+                    spacing:1
                     orientation:'vertical'
                     MDLabel:
                         size_hint: 1, .5
                         halign:'center'
                         text: 'Your location:'
-                    MDLabel:
-                        id:current_location
-                        size_hint: 1, .5
-                        halign:'center'
-                        text:''
+                    BoxLayout:
+                        size_hint: .8, 3
+                        id:map_container
+                        cols:1
+                        pos_hint: {"center_x": .5, "center_y": .5}
+
                     MDLabel:
                         size_hint: 1, .5
                         halign:'center'
@@ -47,7 +48,5 @@
                         md_bg_color: 0.1, 0.1, 0.1, 0.1
                         #on_release:root.ids["map_container"].add_widget(root.map)
                         on_release:root.manager.current="mapScreen"
-                GridLayout:
-                    id:map_container
-                    cols:1
-                #BoxLayout:
+
+                BoxLayout:

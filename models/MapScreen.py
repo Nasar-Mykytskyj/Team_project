@@ -7,7 +7,6 @@ class MapScreen(Screen):
     def __init__(self,**kvargs):
         super(MapScreen, self).__init__(**kvargs)
 
-        self.map=map
 
 
         Window.bind(on_keyboard=self.Android_back_click)

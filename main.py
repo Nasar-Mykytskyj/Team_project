@@ -21,16 +21,24 @@ class Login(Screen):
 class Homepage(Screen):
     def __init__(self,**kvargs):
         super(Homepage, self).__init__(**kvargs)
-        from models.location import location
-        latitude,longitude,self.ids['current_location'].text =location.get_current_location()
-        from models.map import Map
-        self.map=Map(zoom=8, lat=latitude,lon=longitude)
-        x,y=self.map.get_window_xy_from(latitude,longitude,16)
-        self.map.set_zoom_at(9,x,y)
+        self.show_location()
+        from models.map import map
+        self.ids['map_container'].add_widget(map)
 
 
+    def on_enter(self, *args):
+        self.show_location()
     def show_location(self):
-       pass
+        from models.location import location
+        lat, lon = location.get_current_location()
+        from models.map import map
+        map.zoom = 6
+        if map.marker is not None:
+            map.remove_marker(map.marker)
+        from kivy_garden.mapview import MapMarkerPopup
+        map.marker=MapMarkerPopup(lat=lat, lon=lon)
+        map.add_marker(map.marker)
+        map.center_on(lat, lon)
 
 
 class TouristApp(MDApp):
